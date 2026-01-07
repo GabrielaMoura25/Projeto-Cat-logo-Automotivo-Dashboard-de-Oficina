@@ -1,0 +1,136 @@
+.orders-table-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.orders-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.orders-table-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.orders-count {
+  background: var(--color-bg);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.table-container {
+  overflow-x: auto;
+  margin: -0.5rem;
+  padding: 0.5rem;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.orders-table thead {
+  background: var(--color-bg);
+}
+
+.orders-table th {
+  text-align: left;
+  padding: 0.875rem 1rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-tertiary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.orders-table tbody tr {
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.15s ease;
+}
+
+.orders-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.orders-table tbody tr:hover {
+  background: var(--color-bg);
+}
+
+.orders-table td {
+  padding: 1rem;
+  color: var(--color-text-secondary);
+}
+
+.order-id {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-family: "SF Mono", "Monaco", "Courier New", monospace;
+  font-size: 0.9rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-success {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--color-success);
+}
+
+.status-warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--color-warning);
+}
+
+.value-cell {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.date-cell {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-secondary);
+}
+
+.empty-value {
+  color: var(--color-text-tertiary);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .orders-table {
+    font-size: 0.85rem;
+  }
+
+  .orders-table th,
+  .orders-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .orders-table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
