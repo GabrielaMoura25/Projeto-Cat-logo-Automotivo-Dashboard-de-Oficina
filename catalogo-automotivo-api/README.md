@@ -331,14 +331,14 @@ GET http://localhost:3000/api/products
 ```
 src/
 ├── controllers/          # 🎮 Lógica de requisições
-│   └── productController.js
+│   └── product.controller.js
 ├── routes/              # 🛣️ Definição de endpoints
-│   └── products.js
+│   └── product.routes.js
 ├── services/            # 🤖 Lógica de negócio + IA
-│   ├── aiService.js
-│   └── productService.js
+│   ├── ai.service.js
+│   └── product.service.js
 ├── models/              # 📊 Modelos de dados
-│   └── Product.js
+│   └── product.model.js
 ├── database/            # 🗄️ Banco de dados
 │   └── connection.js
 ├── utils/               # 🔧 Funções auxiliares
@@ -1052,14 +1052,14 @@ catalogo-automotivo-api/
 │
 ├── 📂 src/
 │   ├── 📂 controllers/              # 🎮 Lógica de requisições
-│   │   └── productController.js
+│   │   └── product.controller.js
 │   ├── 📂 routes/                   # 🛣️ Definição de endpoints
-│   │   └── products.js
+│   │   └── product.routes.js
 │   ├── 📂 services/                 # 🤖 Lógica de negócio + IA
-│   │   ├── aiService.js
-│   │   └── productService.js
+│   │   ├── ai.service.js
+│   │   └── product.service.js
 │   ├── 📂 models/                   # 📊 Modelos de dados
-│   │   └── Product.js
+│   │   └── product.js
 │   ├── 📂 database/                 # 🗄️ Banco de dados
 │   │   └── connection.js
 │   ├── 📂 utils/                    # 🔧 Funções auxiliares
@@ -1068,18 +1068,14 @@ catalogo-automotivo-api/
 │
 ├── 📂 tests/                        # 🧪 Testes
 │   ├── integration/
-│   │   └── products.test.js
+│   │   └── product.api.test.js
+│   │   └── product.api.errors.test.js
 │   └── unit/
-│       └── aiService.test.js
-│
-├── 📂 screenshots/                  # 📸 Imagens do README
-│   ├── database.png
-│   ├── database-schema.png
-│   ├── api-health.png
-│   ├── api-create.png
-│   ├── api-search.png
-│   ├── api-update.png
-│   └── api-list.png
+│       └── ai.service.test.js
+│       └── product.controller.test.js
+│       └── product.model.test.js
+│       └── product.service.test.js
+│       └── product.validation.test.js 
 │
 ├── 📄 .env.example                  # 🔑 Exemplo de configuração
 ├── 📄 .gitignore
