@@ -297,7 +297,6 @@ GET http://localhost:3000/api/products
 
 | Tecnologia | Versão | Uso |
 |------------|--------|-----|
-
 | **Node.js** | 20+ | Runtime JavaScript |
 | **Express.js** | 4.21.2 | Framework web minimalista |
 | **MySQL** | 8.0 | Banco de dados relacional |
@@ -306,7 +305,6 @@ GET http://localhost:3000/api/products
 
 | Tecnologia | Uso |
 |------------|-----|
-
 | **Google Gemini AI** | Geração de descrições técnicas |
 | **@google/generative-ai** | SDK oficial do Google |
 
@@ -314,7 +312,6 @@ GET http://localhost:3000/api/products
 
 | Tecnologia | Uso |
 |------------|-----|
-
 | **Jest** | Framework de testes |
 | **Supertest** | Testes de integração HTTP |
 | **Docker** | Containerização |
@@ -435,7 +432,6 @@ Response ← ← ← ← ← ← ← ← ← ← ← ← ← AI Service
 
 | Camada | Responsabilidade | Exemplo |
 |--------|------------------|---------|
-
 | **Routes** | Mapeia URLs para controllers | `POST /products → create()` |
 | **Controllers** | Orquestra requisição/resposta | Valida entrada, chama service, retorna JSON |
 | **Services** | Lógica de negócio | Enriquece com IA, valida regras de negócio |
@@ -558,7 +554,6 @@ frenagem, atendendo aos rigorosos padrões técnicos de fabricação.
 
 | Elemento | Razão |
 |----------|-------|
-
 | **Formato direto** | Sem formatação complexa, apenas instrução clara |
 | **Limite de caracteres** | Controla tamanho da resposta e custo de API |
 | **"Não inclua marketing"** | Força descrição técnica, não comercial |
@@ -576,7 +571,6 @@ frenagem, atendendo aos rigorosos padrões técnicos de fabricação.
 
 | Elemento | Razão |
 |----------|-------|
-
 | **Papel (especialista)** | Define o nível técnico esperado |
 | **Estrutura clara** | IA entende exatamente o que fazer |
 | **Regras explícitas** | Evita respostas genéricas ou erradas |
@@ -872,16 +866,44 @@ npm install
 
 #### Passo 2: Configurar MySQL
 
-```sql
--- 1. Crie o banco de dados
+```bash
+# 1. Acesse o MySQL
+mysql -u root -p
+
+# 2. Crie o banco de dados
 CREATE DATABASE catalogo_automotivo;
 
--- 2. Use o banco
+# 3. Use o banco
 USE catalogo_automotivo;
 
--- 3. Execute o schema
-source src/db/schema.sql;
+# 4. Execute as migrations (cria tabelas)
+source scripts/migrate.sql;
+
+# 5. (Opcional) Popule com dados de exemplo
+source scripts/seed.sql;
+
+# 6. Verifique se funcionou
+SHOW TABLES;
+SELECT * FROM products;
 ```
+
+**Ou via linha de comando:**
+
+```bash
+# Cria banco + executa migrations
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS catalogo_automotivo;"
+mysql -u root -p catalogo_automotivo < scripts/migrate.sql
+
+# (Opcional) Adiciona dados de exemplo
+mysql -u root -p catalogo_automotivo < scripts/seed.sql
+```
+
+**Arquivos:**
+
+- **`scripts/migrate.sql`** - Cria a tabela `products`
+- **`scripts/seed.sql`** - Insere 4 produtos de exemplo (sem descrição)
+
+> 💡 **Nota:** Os produtos do seed **não têm descrição**. A IA gerará automaticamente quando você criar/atualizar via API.
 
 #### Passo 3: Configurar Variáveis de Ambiente
 
@@ -1075,7 +1097,6 @@ catalogo-automotivo-api/
 
 | Melhoria | Impacto | Prioridade |
 |----------|---------|------------|
-
 | **CORS configurado** | Controla origens permitidas | 🔴 Alta |
 | **Rate limiting** (express-rate-limit) | Previne abuso | 🔴 Alta |
 | **Helmet.js** | Headers de segurança | 🔴 Alta |
@@ -1113,7 +1134,6 @@ app.use('/api/', limiter)
 
 | Melhoria | Impacto | Prioridade |
 |----------|---------|------------|
-
 | **Cache Redis** | Reduz 90% das chamadas de IA | 🔴 Alta |
 | **Índices no MySQL** | Busca 10x mais rápida | 🔴 Alta |
 | **Compression** | Reduz tamanho de resposta | 🟡 Média |
@@ -1148,7 +1168,6 @@ async function gerarDescricaoComCache(produto) {
 
 | Melhoria | Benefício | Complexidade |
 |----------|-----------|--------------|
-
 | **Fila de processamento** (Bull) | Processa IA assíncrona | 🔴 Alta |
 | **Load balancer** (Nginx) | Distribui carga | 🟡 Média |
 | **Sharding MySQL** | Escala banco horizontalmente | 🔴 Alta |
@@ -1176,7 +1195,6 @@ Notifica cliente via WebSocket
 
 | Melhoria | Resultado Esperado | ROI |
 |----------|--------------------|-----|
-
 | **Cache agressivo** | 90% menos custo | 🔴 Alto |
 | **Fallback progressivo** (GPT-4 → 3.5 → Local) | Sempre disponível | 🔴 Alto |
 | **Fine-tuning** | Descrições 50% melhores | 🟡 Médio |
@@ -1225,7 +1243,6 @@ async function gerarDescricao(produto) {
 
 | Desafio | Solução | Lição Aprendida |
 |---------|---------|-----------------|
-
 | **Latência da IA** | Processamento assíncrono | UX precisa prever delays |
 | **Custo de API** | Cache + chamadas estratégicas | Monitorar custos desde o início |
 | **Validação de dados** | Schema no MySQL + validação no backend | Dados ruins custam caro |
