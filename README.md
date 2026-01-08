@@ -54,8 +54,8 @@ Dashboard web que utiliza IA para **interpretar dados operacionais** e gerar ins
 
 ```bash
 # Clone o repositório
-git clone https://github.com/GabrielaMoura25/Projeto-Catalogo-Automotivo-Dashboard-de-Oficina.git
-cd Projeto-Catalogo-Automotivo-Dashboard-de-Oficina
+git clone https://github.com/GabrielaMoura25/Projeto-Cat-logo-Automotivo-Dashboard-de-Oficina.git
+cd Projeto-Cat-logo-Automotivo-Dashboard-de-Oficina
 
 # Suba toda a stack
 cd catalogo-automotivo-api
@@ -117,7 +117,7 @@ npm run dev
 
 ### Backend - API de Catálogo
 
-![Criação de Produto](catalogo-automotivo-api/screenshots/api-create.png)
+![Criação de Produto](/screenshots/image.png)
 
 **Exemplo:** Ao criar um produto com apenas nome e categoria, a IA gera automaticamente uma descrição técnica completa.
 
@@ -125,7 +125,7 @@ npm run dev
 
 ### Frontend - Dashboard de Gestão
 
-![Dashboard Completo](dashboard-oficina/screenshots/dashboard-completo.png)
+![Dashboard Completo](/screenshots/image-1.png)
 
 **Exemplo:** IA analisa ordens de serviço e gera insights gerenciais como "Há ordens abertas há muito tempo, isso retém capital".
 
@@ -163,7 +163,7 @@ POST /api/products
 
 **Quando a IA é chamada:**
 - ✅ Ao criar produto (gera descrição)
-- ✅ Ao buscar produtos (enriquece resultados)
+- ✅ Ao atualizar produto (somente se for atualizado nome e/ou categoria)
 - ❌ Ao listar todos (evita custo desnecessário)
 
 ---
@@ -196,6 +196,7 @@ Dados de ordens → IA analisa → Gera insights
 - **MySQL 8.0** - Banco de dados
 - **Google Gemini AI** - Geração de descrições
 - **Docker** - Containerização
+- **Jest** - Testes (100% coverage)
 
 ### Frontend
 - **React 18** - Biblioteca UI
@@ -312,10 +313,8 @@ Sistema **nunca quebra** por falha da IA (fallbacks inteligentes).
 
 Desenvolvedora Full Stack especializada em soluções com IA
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Gabriela%20Moura-0077B5?logo=linkedin)](https://linkedin.com/in/seu-perfil)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Gabriela%20Moura-0077B5?logo=linkedin)](https://www.linkedin.com/in/gabriela-daniel-moura/)
 [![GitHub](https://img.shields.io/badge/GitHub-GabrielaMoura25-181717?logo=github)](https://github.com/GabrielaMoura25)
-[![Portfolio](https://img.shields.io/badge/Portfolio-gabrielamoura.dev-FF6B6B)](https://gabrielamoura.dev)
-
 ---
 
 ## 📄 Licença
@@ -334,7 +333,7 @@ Código disponível para fins educacionais e de portfólio.
 
 <div align="center">
 
-**Desenvolvido com ❤️ e ☕ por Gabriela Moura**
+**Desenvolvido com ❤️ e 🚀 por Gabriela Moura**
 
 [⬆ Voltar ao topo](#-sistema-automotivo-com-ia---catálogo--dashboard)
 
