@@ -7,7 +7,7 @@
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-orange.svg)](https://www.mysql.com/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
 [![Google Gemini](https://img.shields.io/badge/Google%20Gemini-AI%20Powered-yellow.svg)](https://ai.google.dev/)
-[![Tests](https://img.shields.io/badge/Tests-100%25-green.svg)](https://vitest.dev/)
+[![Jest](https://img.shields.io/badge/Jest-100%25%20Coverage-green.svg)](https://jestjs.io/)
 
 ## 📋 Índice
 
@@ -54,6 +54,7 @@ Isso afeta diretamente:
 Em um cenário **SaaS**, qualidade de cadastro **não pode depender apenas do usuário**.
 
 **A tecnologia precisa ajudar a:**
+
 - ✅ Corrigir automaticamente
 - ✅ Sugerir padronizações
 - ✅ Enriquecer informações
@@ -78,9 +79,10 @@ Construir uma **API REST de catálogo automotivo** que utilize **Inteligência A
 
 ### 🗄️ Estrutura do Banco de Dados
 
-![Database Structure](screenshots/database-schema.png)
+![Database Structure](/screenshots/database-schema.png)
 
 **Tabela `products`:**
+
 ```sql
 CREATE TABLE products (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -98,9 +100,10 @@ CREATE TABLE products (
 
 ### 📊 Dados no Banco
 
-![Database Data](screenshots/database.png)
+![Database Data](/screenshots/database.png)
 
 **Exemplo de produtos cadastrados:**
+
 - **Pastilha de Freio Dianteira** - Descrição técnica gerada pela IA
 - **Filtro de Óleo** - Enriquecido automaticamente
 - **Amortecedor Traseiro** - Detalhes técnicos completos
@@ -109,13 +112,14 @@ CREATE TABLE products (
 
 ### 🔌 Health Check
 
-![API Health](screenshots/api-health.png)
+![API Health](/screenshots/api-health.png)
 
 ```bash
 GET http://localhost:3000/health
 ```
 
 **Resposta:**
+
 ```json
 {
   "status": "ok"
@@ -126,9 +130,10 @@ GET http://localhost:3000/health
 
 ### ➕ Criar Produto (com IA)
 
-![API Create Product](screenshots/api-create.png)
+![API Create Product](/screenshots/api-create.png)
 
 **Requisição:**
+
 ```bash
 POST http://localhost:3000/api/products
 Content-Type: application/json
@@ -142,6 +147,7 @@ Content-Type: application/json
 ```
 
 **Resposta (IA gerou a descrição automaticamente):**
+
 ```json
 {
   "message": "Produto criado com sucesso",
@@ -150,6 +156,7 @@ Content-Type: application/json
 ```
 
 **No banco, o produto ficou assim:**
+
 ```json
 {
   "id": 1,
@@ -171,16 +178,18 @@ Content-Type: application/json
 
 ---
 
-### 🔍 Buscar Produtos (com IA)
+### 🔍 Buscar Produtos (por texto livre)
 
-![API Search](screenshots/api-search.png)
+![API Search](/screenshots/api-search.png)
 
 **Requisição:**
+
 ```bash
 GET http://localhost:3000/api/products/search?q=moura
 ```
 
-**Resposta (IA enriqueceu os resultados):**
+**Resposta:**
+
 ```json
 [
   {
@@ -196,13 +205,20 @@ GET http://localhost:3000/api/products/search?q=moura
 ]
 ```
 
+**Como funciona:**
+
+- Busca por **nome**, **categoria** ou **marca**
+- Query SQL simples com `LIKE`
+- **NÃO chama IA** (apenas busca no banco)
+
 ---
 
-### ✏️ Atualizar Produto
+### ✏️ Atualizar Produto (com IA condicional)
 
-![API Update](screenshots/api-update.png)
+![API Update](/screenshots/api-update.png)
 
 **Requisição:**
+
 ```bash
 PUT http://localhost:3000/api/products/1
 Content-Type: application/json
@@ -213,24 +229,38 @@ Content-Type: application/json
 ```
 
 **Resposta:**
+
 ```json
 {
   "message": "Produto atualizado com sucesso"
 }
 ```
 
+**Quando a IA é chamada:**
+
+- ✅ **SIM** - Se atualizar `nome` e/ou `categoria`
+- ❌ **NÃO** - Se atualizar apenas `marca` ou `aplicacao_veicular`
+
+**Por quê?**
+
+- Nome e categoria são cruciais para a descrição
+- IA regenera descrição para manter consistência
+- Evita descrições desatualizadas
+
 ---
 
 ### 📋 Listar Todos os Produtos
 
-![API List All](screenshots/api-list.png)
+![API List All](/screenshots/api-list.png)
 
 **Requisição:**
+
 ```bash
 GET http://localhost:3000/api/products
 ```
 
 **Resposta:**
+
 ```json
 [
   {
@@ -267,6 +297,7 @@ GET http://localhost:3000/api/products
 
 | Tecnologia | Versão | Uso |
 |------------|--------|-----|
+
 | **Node.js** | 20+ | Runtime JavaScript |
 | **Express.js** | 4.21.2 | Framework web minimalista |
 | **MySQL** | 8.0 | Banco de dados relacional |
@@ -275,6 +306,7 @@ GET http://localhost:3000/api/products
 
 | Tecnologia | Uso |
 |------------|-----|
+
 | **Google Gemini AI** | Geração de descrições técnicas |
 | **@google/generative-ai** | SDK oficial do Google |
 
@@ -282,7 +314,8 @@ GET http://localhost:3000/api/products
 
 | Tecnologia | Uso |
 |------------|-----|
-| **Vitest** | Framework de testes |
+
+| **Jest** | Framework de testes |
 | **Supertest** | Testes de integração HTTP |
 | **Docker** | Containerização |
 | **Docker Compose** | Orquestração de containers |
@@ -290,7 +323,6 @@ GET http://localhost:3000/api/products
 ### Bibliotecas Auxiliares
 
 - **dotenv** - Gerenciamento de variáveis de ambiente
-- **cors** - Controle de CORS
 - **mysql2** - Driver MySQL com Promises
 
 ---
@@ -306,13 +338,21 @@ src/
 ├── routes/              # 🛣️ Definição de endpoints
 │   └── products.js
 ├── services/            # 🤖 Lógica de negócio + IA
-│   └── aiService.js
-├── db/                  # 🗄️ Conexão com MySQL
-│   ├── connection.js
-│   └── schema.sql
-├── config/              # ⚙️ Configurações
-│   └── env.js
+│   ├── aiService.js
+│   └── productService.js
+├── models/              # 📊 Modelos de dados
+│   └── Product.js
+├── database/            # 🗄️ Banco de dados
+│   └── connection.js
+├── utils/               # 🔧 Funções auxiliares
+│   └── product.validation.js
 └── server.js            # 🚀 Entry point
+
+tests/
+├── integration/         # 🧪 Testes de API
+│   └── products.test.js
+└── unit/               # 🧪 Testes unitários
+    └── aiService.test.js
 ```
 
 ---
@@ -327,25 +367,88 @@ router.post('/products', productController.create)
 
 // controllers/productController.js - Orquestra a requisição
 async function create(req, res) {
-  const produto = await aiService.enriquecerProduto(req.body)
-  const id = await db.insert(produto)
-  res.json({ id })
+  const produto = await productService.create(req.body)
+  res.status(201).json({ 
+    message: 'Produto criado com sucesso', 
+    id: produto.id 
+  })
+}
+
+// services/productService.js - Lógica de negócio
+async function create(data) {
+  // Enriquece com IA se necessário
+  if (!data.descricao) {
+    data.descricao = await aiService.gerarDescricao(data)
+  }
+  
+  // Cria modelo
+  const produto = new Product(data)
+  
+  // Salva no banco
+  return await produto.save()
+}
+
+// models/Product.js - Modelo de dados
+class Product {
+  constructor({ nome, categoria, marca, aplicacao_veicular, descricao }) {
+    this.nome = nome
+    this.categoria = categoria
+    this.marca = marca
+    this.aplicacao_veicular = aplicacao_veicular
+    this.descricao = descricao
+  }
+
+  async save() {
+    const [result] = await db.query(
+      'INSERT INTO products (nome, categoria, marca, aplicacao_veicular, descricao) VALUES (?, ?, ?, ?, ?)',
+      [this.nome, this.categoria, this.marca, this.aplicacao_veicular, this.descricao]
+    )
+    this.id = result.insertId
+    return this
+  }
+
+  static async findAll() {
+    const [rows] = await db.query('SELECT * FROM products')
+    return rows.map(row => new Product(row))
+  }
 }
 
 // services/aiService.js - Integração com IA
-async function enriquecerProduto(produto) {
-  if (!produto.descricao) {
-    produto.descricao = await gerarDescricao(produto)
-  }
-  return produto
+async function gerarDescricao(produto) {
+  if (!genAI) return null
+  
+  const prompt = construirPrompt(produto)
+  const result = await genAI.generateContent(prompt)
+  return result.response.text()
 }
 ```
 
-**Por quê?**
+**Fluxo Completo:**
+
+```
+Request → Route → Controller → Service → Model → Database
+   ↓                                ↓
+Response ← ← ← ← ← ← ← ← ← ← ← ← ← AI Service
+```
+
+**Por quê cada camada?**
+
+| Camada | Responsabilidade | Exemplo |
+|--------|------------------|---------|
+
+| **Routes** | Mapeia URLs para controllers | `POST /products → create()` |
+| **Controllers** | Orquestra requisição/resposta | Valida entrada, chama service, retorna JSON |
+| **Services** | Lógica de negócio | Enriquece com IA, valida regras de negócio |
+| **Models** | Representação de dados | Define estrutura, métodos de persistência |
+| **Database** | Acesso aos dados | Connection pool, queries SQL |
+
+**Benefícios:**
+
 - ✅ **Separation of Concerns** - Cada camada tem uma responsabilidade
 - ✅ **Testabilidade** - Testa cada camada isoladamente
 - ✅ **Manutenibilidade** - Mudanças isoladas não quebram o sistema
 - ✅ **Escalabilidade** - Fácil adicionar novas features
+- ✅ **Reusabilidade** - Models podem ser usados em diferentes controllers
 
 ---
 
@@ -372,6 +475,7 @@ export async function gerarDescricao(produto) {
 ```
 
 **Vantagens:**
+
 - 🔄 **Fácil trocar provedor** (OpenAI, Claude, etc)
 - 🧪 **Testes mockam apenas o serviço**
 - 🔒 **Centraliza tratamento de erros**
@@ -396,6 +500,7 @@ if (!descricaoIA) {
 ```
 
 **Benefícios:**
+
 - ✅ **UX não quebra** - Usuário sempre consegue cadastrar
 - ✅ **Produção resiliente** - Falha da IA não derruba API
 - ✅ **Demo funcional** - Funciona sem API Key
@@ -405,34 +510,73 @@ if (!descricaoIA) {
 #### 4️⃣ **Prompt Engineering Especializado**
 
 ```javascript
-function construirPrompt(produto) {
-  return `
-Você é um especialista em peças automotivas.
+// services/ai.service.js
+async function gerarDescricao(nome, categoria) {
+  if (!genAI) return null;
 
-Gere uma descrição técnica DETALHADA para o produto abaixo.
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-3-flash-preview',
+  });
 
-Produto:
-- Nome: ${produto.nome}
-- Categoria: ${produto.categoria}
-- Marca: ${produto.marca}
-- Aplicação: ${produto.aplicacao_veicular}
+  const prompt = `Crie uma descrição técnica e curta (máximo 500 caracteres) para o produto automotivo "${nome}" da categoria "${categoria}".\nNão inclua dicas de marketing, apenas o texto da descrição.\nUse um tom profissional.`;
 
-Regras:
-1. Use linguagem técnica profissional
-2. Inclua especificações relevantes
-3. Mencione funcionalidades e benefícios
-4. Máximo 500 caracteres
-5. Não invente dados, seja genérico se necessário
-
-Descrição técnica:
-`
+  const result = await model.generateContent([prompt]);
+  return result.response.text();
 }
+```
+
+**Exemplo Real:**
+
+**Entrada:**
+
+```javascript
+gerarDescricao("Amortecedor Traseiro", "Suspensão")
+```
+
+**Prompt Enviado:**
+
+```
+Crie uma descrição técnica e curta (máximo 500 caracteres) para o produto 
+automotivo "Amortecedor Traseiro" da categoria "Suspensão".
+Não inclua dicas de marketing, apenas o texto da descrição.
+Use um tom profissional.
+```
+
+**Resposta da IA:**
+
+```
+Amortecedor traseiro projetado para o sistema de suspensão automotiva. 
+Atua no controle de oscilação das molas, garantindo o contato contínuo 
+dos pneus com o solo e a estabilidade do veículo. Fabricado com materiais 
+de alta resistência, utiliza sistema hidráulico ou pressurizado para 
+dissipar energia cinética e absorver impactos. Essencial para a segurança 
+operacional, reduz o balanço da carroceria e melhora a resposta de 
+frenagem, atendendo aos rigorosos padrões técnicos de fabricação.
 ```
 
 **Decisões do Prompt:**
 
 | Elemento | Razão |
 |----------|-------|
+
+| **Formato direto** | Sem formatação complexa, apenas instrução clara |
+| **Limite de caracteres** | Controla tamanho da resposta e custo de API |
+| **"Não inclua marketing"** | Força descrição técnica, não comercial |
+| **"Tom profissional"** | Define nível de linguagem esperado |
+| **Apenas nome + categoria** | Minimalista, evita prompt muito longo |
+
+**Características Implementadas:**
+
+- ✅ **Retry com timeout** - 3 tentativas de 7 segundos cada
+- ✅ **Graceful degradation** - Retorna `null` se falhar
+- ✅ **Circuit breaker simples** - Evita sobrecarregar a API
+- ✅ **Tratamento robusto de resposta** - Suporta diferentes formatos do SDK
+
+**Decisões do Prompt:**
+
+| Elemento | Razão |
+|----------|-------|
+
 | **Papel (especialista)** | Define o nível técnico esperado |
 | **Estrutura clara** | IA entende exatamente o que fazer |
 | **Regras explícitas** | Evita respostas genéricas ou erradas |
@@ -447,19 +591,27 @@ Descrição técnica:
 // ✅ SIM - Criar produto (enriquece dados)
 POST /api/products → Chama IA se não tiver descrição
 
-// ✅ SIM - Buscar produtos (enriquece resultados)
-GET /api/products/search?q=moura → Pode chamar IA
+// ✅ SIM - Atualizar produto (regenera descrição)
+PUT /api/products/1 
+Body: { "nome": "..." } OU { "categoria": "..." }
+→ Chama IA para regenerar descrição
+
+// ❌ NÃO - Buscar produtos (apenas query SQL)
+GET /api/products/search?q=moura → NÃO chama IA
 
 // ❌ NÃO - Listar todos (evita custo alto)
 GET /api/products → NÃO chama IA (retorna dados brutos)
 
-// ❌ NÃO - Atualizar produto (evita reescrever descrição)
-PUT /api/products/1 → NÃO chama IA (preserva descrição)
+// ❌ NÃO - Atualizar apenas marca/aplicação
+PUT /api/products/1
+Body: { "marca": "Moura Energy" }
+→ NÃO chama IA (preserva descrição)
 ```
 
 **Estratégia de Custo:**
+
 - 💰 **Minimiza chamadas** de IA
-- 🎯 **Chama apenas quando** agrega valor
+- 🎯 **Chama apenas quando** nome/categoria mudam
 - 📊 **Monitorável** - fácil adicionar métricas
 
 ---
@@ -467,31 +619,33 @@ PUT /api/products/1 → NÃO chama IA (preserva descrição)
 #### 6️⃣ **Conexão com MySQL Resiliente**
 
 ```javascript
-// db/connection.js
-import mysql from 'mysql2/promise'
+// database/connection.js
+const mysql = require('mysql2/promise');
+require('dotenv').config();
 
-let pool
+const connection = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
 
-export async function getConnection() {
-  if (!pool) {
-    pool = mysql.createPool({
-      host: process.env.DB_HOST || 'localhost',
-      user: process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || 'root',
-      database: process.env.DB_NAME || 'catalogo_automotivo',
-      waitForConnections: true,
-      connectionLimit: 10,
-      queueLimit: 0
-    })
-  }
-  return pool
-}
+module.exports = connection;
 ```
 
 **Padrão Connection Pool:**
-- ⚡ **Performance** - Reutiliza conexões
-- 🔒 **Concorrência** - Limite de 10 conexões simultâneas
-- 📈 **Escalabilidade** - Fila ilimitada de requisições
+
+- ⚡ **Performance** - Reutiliza conexões automaticamente
+- 🔒 **Concorrência** - Gerencia múltiplas requisições simultâneas
+- 📈 **Escalabilidade** - Pool cresce conforme necessidade
+- 🔧 **Configuração simples** - Usa variáveis de ambiente
+
+**Benefícios do `mysql2/promise`:**
+
+- ✅ Suporte nativo a `async/await`
+- ✅ Pool de conexões automático
+- ✅ Melhor performance que `mysql` tradicional
+- ✅ Compatível com prepared statements
 
 ---
 
@@ -530,6 +684,7 @@ async function create(req, res) {
 ```
 
 **Fluxo:**
+
 ```
 Usuário envia produto SEM descrição
         ↓
@@ -542,75 +697,96 @@ Salva produto ENRIQUECIDO no banco
 
 ---
 
-#### 2. **Buscar Produtos (GET /api/products/search)**
+#### 2. **Atualizar Produto (PUT /api/products/:id)**
 
 ```javascript
-async function search(req, res) {
-  const { q } = req.query
+async function update(req, res) {
+  const { id } = req.params
+  const { nome, categoria, marca, aplicacao_veicular } = req.body
 
-  // Busca no banco
-  const [rows] = await db.query(
-    'SELECT * FROM products WHERE nome LIKE ? OR categoria LIKE ? OR marca LIKE ?',
-    [`%${q}%`, `%${q}%`, `%${q}%`]
+  // Se nome OU categoria mudaram, regenera descrição
+  let novaDescricao = null
+
+  if (nome || categoria) {
+    // Busca dados atuais do produto
+    const [rows] = await db.query('SELECT * FROM products WHERE id = ?', [id])
+    const produtoAtual = rows[0]
+
+    const nomeAtualizado = nome || produtoAtual.nome
+    const categoriaAtualizada = categoria || produtoAtual.categoria
+
+    // Regenera descrição com dados atualizados
+    novaDescricao = await aiService.gerarDescricao(nomeAtualizado, categoriaAtualizada)
+  }
+
+  // Monta query de atualização
+  const campos = []
+  const valores = []
+
+  if (nome) { campos.push('nome = ?'); valores.push(nome) }
+  if (categoria) { campos.push('categoria = ?'); valores.push(categoria) }
+  if (marca) { campos.push('marca = ?'); valores.push(marca) }
+  if (aplicacao_veicular) { campos.push('aplicacao_veicular = ?'); valores.push(aplicacao_veicular) }
+  if (novaDescricao) { campos.push('descricao = ?'); valores.push(novaDescricao) }
+
+  valores.push(id)
+
+  await db.query(
+    `UPDATE products SET ${campos.join(', ')} WHERE id = ?`,
+    valores
   )
 
-  // OPCIONAL: Enriquece resultados com IA
-  // (Exemplo: Gera sinônimos, normaliza termos)
-  
-  res.json(rows)
+  res.json({ message: 'Produto atualizado com sucesso' })
 }
 ```
 
-**Potencial de IA aqui:**
-- 🔍 **Busca semântica** - "amortecedor" encontra "suspensão"
-- 📝 **Normalização** - "oleo" encontra "óleo"
-- 🎯 **Ranking inteligente** - Ordena por relevância
+**Fluxo:**
 
----
+```
+Usuário atualiza nome OU categoria
+        ↓
+API detecta mudança crítica
+        ↓
+Busca dados atuais do produto
+        ↓
+Chama IA: gerarDescricao(nome_novo, categoria_nova)
+        ↓
+Atualiza produto com nova descrição
+```
 
-### 📝 Exemplo Completo de Prompt
+**Quando a IA é chamada no PUT:**
 
-**Entrada:**
-```json
+- ✅ **SIM** - Se atualizar `nome` e/ou `categoria`
+- ❌ **NÃO** - Se atualizar apenas `marca` ou `aplicacao_veicular`
+
+**Por quê?**
+
+- Nome e categoria são **cruciais** para a descrição técnica
+- IA regenera descrição para **manter consistência**
+- Evita descrições **desatualizadas** ou **incorretas**
+
+**Exemplo:**
+
+```javascript
+// Produto original
 {
-  "nome": "Amortecedor Traseiro",
-  "categoria": "Suspensão",
-  "marca": "Monroe",
-  "aplicacao_veicular": "HB20 1.6 2015 a 2019"
+  "nome": "Filtro de Ar",
+  "categoria": "Motor",
+  "descricao": "Filtro de ar para sistema de admissão..."
 }
-```
 
-**Prompt enviado para a IA:**
-```
-Você é um especialista em peças automotivas.
+// Atualiza categoria
+PUT /api/products/1
+{
+  "categoria": "Filtração"
+}
 
-Gere uma descrição técnica DETALHADA para o produto abaixo.
-
-Produto:
-- Nome: Amortecedor Traseiro
-- Categoria: Suspensão
-- Marca: Monroe
-- Aplicação: HB20 1.6 2015 a 2019
-
-Regras:
-1. Use linguagem técnica profissional
-2. Inclua especificações relevantes
-3. Mencione funcionalidades e benefícios
-4. Máximo 500 caracteres
-5. Não invente dados, seja genérico se necessário
-
-Descrição técnica:
-```
-
-**Resposta da IA:**
-```
-Amortecedor traseiro projetado para o sistema de suspensão automotiva. 
-Atua no controle de oscilação das molas, garantindo o contato contínuo 
-dos pneus com o solo e a estabilidade do veículo. Fabricado com materiais 
-de alta resistência, utiliza sistema hidráulico ou pressurizado para 
-dissipar energia cinética e absorver impactos. Essencial para a segurança 
-operacional, reduz o balanço da carroceria e melhora a resposta de 
-frenagem, atendendo aos rigorosos padrões técnicos de fabricação.
+// IA regenera descrição
+{
+  "nome": "Filtro de Ar",
+  "categoria": "Filtração",
+  "descricao": "Filtro de ar para sistema de filtração..." // ← Nova descrição!
+}
 ```
 
 ---
@@ -661,8 +837,8 @@ try {
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/GabrielaMoura25/Projeto-Catalogo-Automotivo-Dashboard-de-Oficina.git
-cd Projeto-Catalogo-Automotivo-Dashboard-de-Oficina/catalogo-automotivo-api
+git clone https://github.com/GabrielaMoura25/Projeto-Cat-logo-Automotivo-Dashboard-de-Oficina.git
+cd Projeto-Cat-logo-Automotivo-Dashboard-de-Oficina
 
 # 2. Configure as variáveis de ambiente
 cp .env.example .env
@@ -677,9 +853,9 @@ curl http://localhost:3000/health
 ```
 
 **O que o Docker Compose faz:**
+
 - ✅ Cria container MySQL
-- ✅ Cria banco `catalogo_automotivo`
-- ✅ Executa `schema.sql` automaticamente
+- ✅ Cria banco `catalogo`
 - ✅ Sobe a API na porta 3000
 - ✅ Configura rede interna
 
@@ -728,7 +904,6 @@ DB_PORT=3306
 
 # Servidor
 PORT=3000
-NODE_ENV=development
 ```
 
 #### Passo 4: Executar
@@ -762,174 +937,6 @@ curl http://localhost:3000/health
 
 ---
 
-## 🔌 Endpoints da API
-
-### Base URL
-```
-http://localhost:3000
-```
-
----
-
-### 1. **Health Check**
-
-Verifica se a API está online.
-
-```http
-GET /health
-```
-
-**Resposta:**
-```json
-{
-  "status": "ok"
-}
-```
-
-**Status Code:** `200 OK`
-
----
-
-### 2. **Criar Produto**
-
-Cria um novo produto (IA gera descrição se não fornecida).
-
-```http
-POST /api/products
-Content-Type: application/json
-
-{
-  "nome": "Filtro de Ar",
-  "categoria": "Motor",
-  "marca": "Tecfil",
-  "aplicacao_veicular": "Civic 1.8 2012+"
-}
-```
-
-**Resposta:**
-```json
-{
-  "message": "Produto criado com sucesso",
-  "id": 220
-}
-```
-
-**Status Code:** `201 Created`
-
-**Campos:**
-- `nome` (obrigatório) - Nome do produto
-- `categoria` (obrigatório) - Categoria do produto
-- `marca` (opcional) - Marca do produto
-- `aplicacao_veicular` (opcional) - Veículo compatível
-- `descricao` (opcional) - Se não informada, IA gera automaticamente
-
----
-
-### 3. **Listar Todos os Produtos**
-
-Retorna todos os produtos cadastrados.
-
-```http
-GET /api/products
-```
-
-**Resposta:**
-```json
-[
-  {
-    "id": 217,
-    "nome": "Pastilha de Freio Dianteira",
-    "categoria": "Freios",
-    "marca": "Bosch",
-    "aplicacao_veicular": "Gol G6 1.6 2014+",
-    "descricao": "Pastilha de freio dianteira desenvolvida com materiais...",
-    "criado_em": "2026-01-07T17:55:48.000Z",
-    "atualizado_em": "2026-01-07T17:55:48.000Z"
-  }
-]
-```
-
-**Status Code:** `200 OK`
-
----
-
-### 4. **Buscar Produtos**
-
-Busca produtos por nome, categoria ou marca.
-
-```http
-GET /api/products/search?q=filtro
-```
-
-**Resposta:**
-```json
-[
-  {
-    "id": 218,
-    "nome": "Filtro de Óleo",
-    "categoria": "Lubrificação",
-    "marca": "MANN Filter",
-    "aplicacao_veicular": "Onix 1.0 2019+",
-    "descricao": "O filtro de óleo é um componente crítico...",
-    "criado_em": "2026-01-07T20:57:15.000Z",
-    "atualizado_em": "2026-01-07T20:57:15.000Z"
-  }
-]
-```
-
-**Status Code:** `200 OK`
-
-**Query Params:**
-- `q` (obrigatório) - Termo de busca
-
----
-
-### 5. **Atualizar Produto**
-
-Atualiza um produto existente.
-
-```http
-PUT /api/products/1
-Content-Type: application/json
-
-{
-  "categoria": "Elétrica Premium",
-  "marca": "Moura Energy"
-}
-```
-
-**Resposta:**
-```json
-{
-  "message": "Produto atualizado com sucesso"
-}
-```
-
-**Status Code:** `200 OK`
-
-**Nota:** IA **não é chamada** em atualizações (preserva descrição original).
-
----
-
-### 6. **Deletar Produto**
-
-Remove um produto do catálogo.
-
-```http
-DELETE /api/products/1
-```
-
-**Resposta:**
-```json
-{
-  "message": "Produto deletado com sucesso"
-}
-```
-
-**Status Code:** `200 OK`
-
----
-
 ## 🧪 Testes
 
 ### ✅ Executar Todos os Testes
@@ -951,11 +958,16 @@ File                       | % Stmts | % Branch | % Funcs | % Lines
 ---------------------------|---------|----------|---------|--------
 All files                  |     100 |      100 |     100 |     100
  controllers               |     100 |      100 |     100 |     100
-  productController.js     |     100 |      100 |     100 |     100
+  product.controller.js    |     100 |      100 |     100 |     100
  services                  |     100 |      100 |     100 |     100
-  aiService.js             |     100 |      100 |     100 |     100
+  ai.service.js            |     100 |      100 |     100 |     100
+  product.service.js       |     100 |      100 |     100 |     100
+ models                    |     100 |      100 |     100 |     100
+  product.model.js         |     100 |      100 |     100 |     100
  routes                    |     100 |      100 |     100 |     100
-  products.js              |     100 |      100 |     100 |     100
+  product.routes.js        |     100 |      100 |     100 |     100
+ utils                     |     100 |      100 |     100 |     100
+  product.validation.js    |     100 |      100 |     100 |     100
 ```
 
 ---
@@ -1022,12 +1034,14 @@ catalogo-automotivo-api/
 │   ├── 📂 routes/                   # 🛣️ Definição de endpoints
 │   │   └── products.js
 │   ├── 📂 services/                 # 🤖 Lógica de negócio + IA
-│   │   └── aiService.js
-│   ├── 📂 db/                       # 🗄️ Banco de dados
-│   │   ├── connection.js
-│   │   └── schema.sql
-│   ├── 📂 config/                   # ⚙️ Configurações
-│   │   └── env.js
+│   │   ├── aiService.js
+│   │   └── productService.js
+│   ├── 📂 models/                   # 📊 Modelos de dados
+│   │   └── Product.js
+│   ├── 📂 database/                 # 🗄️ Banco de dados
+│   │   └── connection.js
+│   ├── 📂 utils/                    # 🔧 Funções auxiliares
+│   │   └── product.validation.js
 │   └── 📄 server.js                 # 🚀 Entry point
 │
 ├── 📂 tests/                        # 🧪 Testes
@@ -1061,14 +1075,27 @@ catalogo-automotivo-api/
 
 | Melhoria | Impacto | Prioridade |
 |----------|---------|------------|
+
+| **CORS configurado** | Controla origens permitidas | 🔴 Alta |
 | **Rate limiting** (express-rate-limit) | Previne abuso | 🔴 Alta |
-| **Validação de entrada** (Joi/Zod) | Evita SQL injection | 🔴 Alta |
 | **Helmet.js** | Headers de segurança | 🔴 Alta |
 | **API Key no header** | Autenticação | 🟡 Média |
 | **JWT para autenticação** | Controle de acesso | 🟡 Média |
 | **HTTPS obrigatório** | Criptografia | 🔴 Alta |
 
+**Exemplo de CORS:**
+
+```javascript
+import cors from 'cors'
+
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || 'http://localhost:5173',
+  credentials: true
+}))
+```
+
 **Exemplo:**
+
 ```javascript
 import rateLimit from 'express-rate-limit'
 
@@ -1086,13 +1113,13 @@ app.use('/api/', limiter)
 
 | Melhoria | Impacto | Prioridade |
 |----------|---------|------------|
+
 | **Cache Redis** | Reduz 90% das chamadas de IA | 🔴 Alta |
 | **Índices no MySQL** | Busca 10x mais rápida | 🔴 Alta |
 | **Compression** | Reduz tamanho de resposta | 🟡 Média |
-| **Cluster mode** | Usa todos os cores do CPU | 🟡 Média |
-| **CDN** | Serve assets estáticos | 🟢 Baixa |
 
 **Exemplo de Cache:**
+
 ```javascript
 import redis from 'redis'
 
@@ -1121,6 +1148,7 @@ async function gerarDescricaoComCache(produto) {
 
 | Melhoria | Benefício | Complexidade |
 |----------|-----------|--------------|
+
 | **Fila de processamento** (Bull) | Processa IA assíncrona | 🔴 Alta |
 | **Load balancer** (Nginx) | Distribui carga | 🟡 Média |
 | **Sharding MySQL** | Escala banco horizontalmente | 🔴 Alta |
@@ -1148,6 +1176,7 @@ Notifica cliente via WebSocket
 
 | Melhoria | Resultado Esperado | ROI |
 |----------|--------------------|-----|
+
 | **Cache agressivo** | 90% menos custo | 🔴 Alto |
 | **Fallback progressivo** (GPT-4 → 3.5 → Local) | Sempre disponível | 🔴 Alto |
 | **Fine-tuning** | Descrições 50% melhores | 🟡 Médio |
@@ -1155,6 +1184,7 @@ Notifica cliente via WebSocket
 | **Batch processing** | Processa 100 produtos de uma vez | 🟢 Baixo |
 
 **Exemplo de Fallback:**
+
 ```javascript
 async function gerarDescricao(produto) {
   try {
@@ -1168,29 +1198,6 @@ async function gerarDescricao(produto) {
   }
 }
 ```
-
----
-
-### 📊 Observabilidade
-
-| Melhoria | Valor | Esforço |
-|----------|-------|---------|
-| **Logs estruturados** (Winston) | Debug facilitado | 🟢 Baixo |
-| **APM** (New Relic) | Performance em produção | 🟡 Médio |
-| **Error tracking** (Sentry) | Detecta bugs antes do usuário | 🟡 Médio |
-| **Dashboards** (Grafana) | Visualização de métricas | 🔴 Alto |
-
-**Exemplo de Log Estruturado:**
-```javascript
-logger.info('Produto criado', {
-  productId: 123,
-  category: 'Suspensão',
-  aiUsed: true,
-  latency: 450
-})
-```
-
----
 
 ## 🎓 Aprendizados e Desafios
 
@@ -1218,6 +1225,7 @@ logger.info('Produto criado', {
 
 | Desafio | Solução | Lição Aprendida |
 |---------|---------|-----------------|
+
 | **Latência da IA** | Processamento assíncrono | UX precisa prever delays |
 | **Custo de API** | Cache + chamadas estratégicas | Monitorar custos desde o início |
 | **Validação de dados** | Schema no MySQL + validação no backend | Dados ruins custam caro |
@@ -1231,9 +1239,8 @@ logger.info('Produto criado', {
 
 Desenvolvedora Full Stack especializada em soluções com IA
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Gabriela%20Moura-0077B5?logo=linkedin)](https://linkedin.com/in/seu-perfil)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Gabriela%20Moura-0077B5?logo=linkedin)](https://www.linkedin.com/in/gabriela-daniel-moura/)
 [![GitHub](https://img.shields.io/badge/GitHub-GabrielaMoura25-181717?logo=github)](https://github.com/GabrielaMoura25)
-[![Portfolio](https://img.shields.io/badge/Portfolio-gabrielamoura.dev-FF6B6B)](https://gabrielamoura.dev)
 
 ---
 
@@ -1257,14 +1264,14 @@ Código disponível para fins educacionais e de portfólio.
 - **Google Gemini** pela API de IA acessível e poderosa
 - **MySQL** pela confiabilidade em produção
 - **Docker** por simplificar ambientes
-- **Vitest** pelo framework de testes rápido
+- **Jest** pelo framework de testes rápido
 - **Você** por ler até aqui! 🚀
 
 ---
 
 <div align="center">
 
-**Desenvolvido com ❤️ e ☕ por Gabriela Moura**
+**Desenvolvido com ❤️ e 🚀 por Gabriela Moura**
 
 [⬆ Voltar ao topo](#-api-de-catálogo-automotivo-com-ia-assistiva)
 
