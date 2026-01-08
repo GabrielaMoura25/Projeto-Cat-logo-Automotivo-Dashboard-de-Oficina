@@ -117,7 +117,7 @@ npm run dev
 
 ### Backend - API de Catálogo
 
-![Criação de Produto](/screenshots/image.png)
+![Criação de Produto](/screenshots/api-create.png)
 
 **Exemplo:** Ao criar um produto com apenas nome e categoria, a IA gera automaticamente uma descrição técnica completa.
 
@@ -125,7 +125,7 @@ npm run dev
 
 ### Frontend - Dashboard de Gestão
 
-![Dashboard Completo](/screenshots/image-1.png)
+![Dashboard Completo](/screenshots/dashboard-completo.png)
 
 **Exemplo:** IA analisa ordens de serviço e gera insights gerenciais como "Há ordens abertas há muito tempo, isso retém capital".
 
