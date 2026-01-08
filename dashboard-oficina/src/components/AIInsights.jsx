@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 import { gerarInsight } from "../services/aiService"
+import { parseInsight } from "../utils/parseInsight"
 import "./AIInsights.css"
 
 const FALLBACK_INSIGHTS = {
@@ -26,78 +27,44 @@ export function AIInsights({ dados }) {
   const [modoOffline, setModoOffline] = useState(false)
 
   const dadosProcessadosRef = useRef("")
+  const analisandoRef = useRef(false)
 
   useEffect(() => {
     const dadosString = JSON.stringify(dados)
 
-    if (!dados || dados.length === 0 || dadosString === dadosProcessadosRef.current) {
+    if (!dados || dados.length === 0) {
+      return
+    }
+
+    if (dadosString === dadosProcessadosRef.current || analisandoRef.current) {
       return
     }
 
     async function analisar() {
       try {
+        analisandoRef.current = true
         setCarregando(true)
         setModoOffline(false)
+        
         const resultado = await gerarInsight(dados)
 
         if (resultado.includes("Erro") || resultado.includes("não configurada") || resultado.includes("indisponível")) {
           setModoOffline(true)
         } else {
           setInsight(resultado)
+          dadosProcessadosRef.current = dadosString
         }
-
-        dadosProcessadosRef.current = dadosString
       } catch (error) {
         console.error("Erro na IA:", error)
         setModoOffline(true)
       } finally {
         setCarregando(false)
+        analisandoRef.current = false
       }
     }
 
     analisar()
   }, [dados])
-
-  const parseInsight = (texto) => {
-    if (!texto) return { resumo: "", atencao: [], oportunidades: [] }
-
-    const sections = {
-      resumo: "",
-      atencao: [],
-      oportunidades: [],
-    }
-
-    const resumoMatch = texto.match(/📌\s*Resumo Executivo:?\s*\n?(.+?)(?=⚠️|$)/s)
-    const atencaoMatch = texto.match(/⚠️\s*Pontos de Atenção:?\s*\n?(.+?)(?=🚀|$)/s)
-    const oportunidadesMatch = texto.match(/🚀\s*Oportunidades:?\s*\n?(.+?)$/s)
-
-    if (resumoMatch) {
-      sections.resumo =
-        resumoMatch[1]
-          .trim()
-          .replace(/^-\s*/gm, "")
-          .split("\n")
-          .filter((f) => f.trim())[0] || ""
-    }
-
-    if (atencaoMatch) {
-      sections.atencao = atencaoMatch[1]
-        .trim()
-        .split(/\n/)
-        .map((line) => line.replace(/^-\s*/, "").trim())
-        .filter((line) => line.length > 0)
-    }
-
-    if (oportunidadesMatch) {
-      sections.oportunidades = oportunidadesMatch[1]
-        .trim()
-        .split(/\n/)
-        .map((line) => line.replace(/^-\s*/, "").trim())
-        .filter((line) => line.length > 0)
-    }
-
-    return sections
-  }
 
   const { resumo, atencao, oportunidades } = modoOffline ? FALLBACK_INSIGHTS : parseInsight(insight)
 
@@ -106,55 +73,57 @@ export function AIInsights({ dados }) {
       <div className="ai-header">
         <span className="ai-icon">🤖</span>
         <h2>Insights Inteligentes</h2>
-        {carregando && <span className="loading-spinner"></span>}
-        {modoOffline && !carregando && <span className="offline-badge">Modo Demo</span>}
+        {modoOffline && <span className="offline-badge">Modo Demo</span>}
       </div>
 
-      <div className="ai-sections">
-        <div className="ai-section ai-summary">
-          <div className="section-header">
-            <span className="section-icon">📊</span>
-            <h3>Resumo Executivo</h3>
-          </div>
-          <p className="section-content">{carregando ? "Analisando dados..." : resumo}</p>
+      {carregando ? (
+        <div className="ai-loading-state">
+          <div className="loading-spinner"></div>
+          <p>Analisando seus dados com IA...</p>
         </div>
+      ) : (
+        <div className="ai-sections">
+          <div className="ai-section ai-summary">
+            <div className="section-header">
+              <span className="section-icon">📊</span>
+              <h3>Resumo Executivo</h3>
+            </div>
+            <p className="section-content">{resumo}</p>
+          </div>
 
-        <div className="ai-section ai-warning">
-          <div className="section-header">
-            <span className="section-icon">⚠️</span>
-            <h3>Pontos de Atenção</h3>
+          <div className="ai-section ai-warning">
+            <div className="section-header">
+              <span className="section-icon">⚠️</span>
+              <h3>Pontos de Atenção</h3>
+            </div>
+            {atencao.length > 0 ? (
+              <ul className="section-list">
+                {atencao.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="section-content empty">Nenhum ponto crítico identificado</p>
+            )}
           </div>
-          {carregando ? (
-            <p className="section-content empty">Analisando...</p>
-          ) : atencao.length > 0 ? (
-            <ul className="section-list">
-              {atencao.map((item, idx) => (
-                <li key={idx}>{item}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="section-content empty">Nenhum ponto crítico identificado</p>
-          )}
-        </div>
 
-        <div className="ai-section ai-opportunity">
-          <div className="section-header">
-            <span className="section-icon">💡</span>
-            <h3>Oportunidades</h3>
+          <div className="ai-section ai-opportunity">
+            <div className="section-header">
+              <span className="section-icon">💡</span>
+              <h3>Oportunidades</h3>
+            </div>
+            {oportunidades.length > 0 ? (
+              <ul className="section-list">
+                {oportunidades.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="section-content empty">Continue focando no crescimento</p>
+            )}
           </div>
-          {carregando ? (
-            <p className="section-content empty">Buscando oportunidades...</p>
-          ) : oportunidades.length > 0 ? (
-            <ul className="section-list">
-              {oportunidades.map((item, idx) => (
-                <li key={idx}>{item}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="section-content empty">Continue focando no crescimento</p>
-          )}
         </div>
-      </div>
+      )}
     </div>
   )
 }

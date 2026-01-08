@@ -1,17 +1,39 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+/**
+ * Inicializa o cliente do Gemini
+ * Separado para facilitar testes e manutenção
+ */
+function createGenAI(apiKey) {
+  if (!apiKey) {
+    console.warn("VITE_GEMINI_API_KEY não informada — IA desativada");
+    return null;
+  }
 
-let genAI = null;
-
-if (apiKey) {
   try {
-    genAI = new GoogleGenerativeAI(apiKey);
+    return new GoogleGenerativeAI(apiKey);
   } catch (e) {
     console.error("Erro ao inicializar Gemini:", e);
+    return null;
   }
-} else {
-  console.warn("VITE_GEMINI_API_KEY não informada — IA desativada");
+}
+
+const genAI = createGenAI(import.meta.env.VITE_GEMINI_API_KEY);
+
+/**
+ * Normaliza a resposta da IA
+ * Função pura → fácil de testar
+ */
+export function extractResponseText(response) {
+  if (typeof response?.text === "function") {
+    return response.text();
+  }
+
+  if (typeof response?.text === "string") {
+    return response.text;
+  }
+
+  return "Não foi possível gerar uma análise clara.";
 }
 
 /**
@@ -28,42 +50,32 @@ export async function gerarInsight(dados) {
     });
 
     const prompt = `
-    Você é um analista de gestão de oficinas mecânicas.
+Você é um analista de gestão de oficinas mecânicas.
 
-    A partir dos dados abaixo (JSON real), gere uma análise gerencial estruturada EXATAMENTE neste formato:
+A partir dos dados abaixo (JSON real), gere uma análise gerencial estruturada EXATAMENTE neste formato:
 
-    📌 Resumo Executivo:
-    - 2 a 3 frases objetivas interpretando o cenário geral.
+📌 Resumo Executivo:
+- 2 a 3 frases objetivas interpretando o cenário geral.
 
-    ⚠️ Pontos de Atenção:
-    - Liste de 2 a 4 possíveis problemas operacionais ou riscos.
+⚠️ Pontos de Atenção:
+- Liste de 2 a 4 possíveis problemas operacionais ou riscos.
 
-    🚀 Oportunidades:
-    - Liste de 2 a 4 ações práticas para melhoria do negócio.
+🚀 Oportunidades:
+- Liste de 2 a 4 ações práticas para melhoria do negócio.
 
-    Regras:
-    - Não descreva gráficos
-    - Não repita números
-    - Interprete os dados
-    - Use linguagem clara, direta e executiva
+Regras:
+- Não descreva gráficos
+- Não repita números
+- Interprete os dados
+- Use linguagem clara, direta e executiva
 
-    Dados:
-    ${JSON.stringify(dados, null, 2)}
-    `;
+Dados:
+${JSON.stringify(dados, null, 2)}
+`;
 
     const result = await model.generateContent(prompt);
 
-    const response = result.response;
-
-    if (typeof response.text === "function") {
-      return response.text();
-    }
-
-    if (typeof response.text === "string") {
-      return response.text;
-    }
-
-    return "Não foi possível gerar uma análise clara.";
+    return extractResponseText(result.response);
   } catch (error) {
     console.error("Erro ao gerar insight via IA:", error);
     return "Erro ao gerar análise inteligente.";
