@@ -56,7 +56,7 @@ Criar um dashboard web que:
 
 ### 🖥️ Dashboard Completo
 
-![Dashboard Completo](screenshots/dashboard-completo.png)
+![Dashboard Completo](/screenshots/dashboard-completo.png)
 
 **Funcionalidades visíveis:**
 - 💰 **Total Faturado** - Soma de todas as ordens fechadas
@@ -70,7 +70,7 @@ Criar um dashboard web que:
 
 ### 🤖 Insights Gerados pela IA
 
-![Insights da IA](screenshots/insights-ia.png)
+![Insights da IA](/screenshots/dashboard-oficina-demo.png)
 
 **Exemplo de Análise Real:**
 
@@ -136,14 +136,18 @@ mix saudável de serviços básicos e complexos.
 ```
 src/
 ├── components/              # Componentes React
-│   ├── Dashboard.jsx        # 🎛️ Container principal e orquestração
+│   ├── Dashboard.jsx        # 🎛️ Container principal
 │   ├── Indicators.jsx       # 📊 KPIs visuais (faturamento, ticket médio)
 │   ├── OrdersTable.jsx      # 📋 Tabela de ordens de serviço
 │   └── AIInsights.jsx       # 🤖 Análise de IA em tempo real
+├── hooks/                   # 🎣 Hooks customizados
+│   └── useOrders.js         # Calcula métricas (faturamento, ticket médio)
 ├── services/                # 🔌 Camada de serviços
 │   └── aiService.js         # Integração com Google Gemini
 ├── utils/                   # 🛠️ Utilitários
 │   └── parseInsight.js      # Parser de respostas da IA
+├── data/                    # 📊 Dados mockados
+│   └── orders.mock.js       # 5 ordens de serviço de exemplo
 └── App.jsx                  # 🚀 Entry point
 ```
 
@@ -156,11 +160,6 @@ src/
 Cada componente tem **uma única razão para mudar**:
 
 ```javascript
-// Dashboard.jsx - Orquestração
-- Gerencia estado global
-- Calcula indicadores
-- Distribui dados para componentes filhos
-
 // Indicators.jsx - Apresentação
 - Exibe KPIs formatados
 - Responsável apenas pela visualização
@@ -204,6 +203,7 @@ export async function gerarInsight(dados) {
 ```
 
 **Vantagens:**
+
 - 🔄 Fácil trocar provedor de IA (OpenAI, Claude, etc)
 - 🧪 Testes mockam apenas a camada de serviço
 - 🔒 Centraliza tratamento de erros
@@ -228,12 +228,14 @@ const FALLBACK_INSIGHTS = {
 ```
 
 **Quando ativa?**
+
 - 🔑 API Key não configurada
 - 🌐 Erro de rede
 - ⚠️ Resposta inválida da IA
 - ⏱️ Timeout
 
 **Por quê?**
+
 - ✅ **UX não quebra** - usuário sempre vê conteúdo
 - ✅ **Demo funcional** - apresentações sem custos de API
 - ✅ **Graceful degradation** - sistema resiliente
@@ -267,9 +269,77 @@ useEffect(() => {
 ```
 
 **Benefícios:**
+
 - 💰 **Reduz custos** de API
 - ⚡ **Melhora performance**
 - 🔒 **Previne race conditions**
+
+---
+
+#### 5️⃣ **Hook Customizado (useOrders.js)**
+
+```javascript
+// hooks/useOrders.js
+import { orders } from "../data/orders.mock";
+
+export function useOrders() {
+  const totalFaturado = orders
+    .filter(o => o.status === "fechada")
+    .reduce((sum, o) => sum + o.valor, 0);
+
+  const fechadas = orders.filter(o => o.status === "fechada");
+  const abertas = orders.filter(o => o.status === "aberta");
+
+  const ticketMedio =
+    fechadas.length > 0
+      ? totalFaturado / fechadas.length
+      : 0;
+
+  return {
+    orders,
+    totalFaturado,
+    ticketMedio,
+    abertas: abertas.length,
+    fechadas: fechadas.length,
+  };
+}
+```
+
+**Por quê um hook?**
+
+- ✅ **Separation of Concerns** - Lógica de cálculo isolada
+- ✅ **Reusabilidade** - Pode ser usado em múltiplos componentes
+- ✅ **Testabilidade** - Testa apenas a lógica de negócio
+- ✅ **Manutenibilidade** - Mudanças não afetam componentes
+
+**Dados mockados (data/orders.mock.js):**
+
+```javascript
+export const orders = [
+  {
+    id: 1,
+    valor: 500,
+    status: "fechada",
+    dataAbertura: "2024-01-01",
+    dataFechamento: "2024-01-02",
+  },
+  {
+    id: 2,
+    valor: 300,
+    status: "aberta",
+    dataAbertura: "2024-01-03",
+    dataFechamento: null,
+  },
+  // ... 3 mais
+];
+```
+
+**Por quê mockar dados?**
+
+- 🎯 **Desenvolvimento rápido** - Não precisa de backend funcionando
+- 🧪 **Testes confiáveis** - Dados previsíveis
+- 📊 **Demo funcional** - Sistema funciona standalone
+- 🔄 **Fácil substituir** - Trocar por API real é simples
 
 ---
 
@@ -484,10 +554,10 @@ try {
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/GabrielaMoura25/Projeto-Catalogo-Automotivo-Dashboard-de-Oficina.git
+git clone https://github.com/GabrielaMoura25/Projeto-Cat-logo-Automotivo-Dashboard-de-Oficina.git
 
 # 2. Entre na pasta do dashboard
-cd Projeto-Catalogo-Automotivo-Dashboard-de-Oficina/dashboard-oficina
+cd Projeto-Cat-logo-Automotivo-Dashboard-de-Oficina
 
 # 3. Instale as dependências
 npm install
@@ -568,13 +638,16 @@ File                             | % Stmts | % Branch | % Funcs | % Lines |
 All files                        |     100 |      100 |     100 |     100 |
  src/components                  |     100 |      100 |     100 |     100 |
   AIInsights.jsx                 |     100 |      100 |     100 |     100 |
-  Dashboard.jsx                  |     100 |      100 |     100 |     100 |
   Indicators.jsx                 |     100 |      100 |     100 |     100 |
   OrdersTable.jsx                |     100 |      100 |     100 |     100 |
  src/services                    |     100 |      100 |     100 |     100 |
   aiService.js                   |     100 |      100 |     100 |     100 |
  src/utils                       |     100 |      100 |     100 |     100 |
   parseInsight.js                |     100 |      100 |     100 |     100 |
+ src/hooks                       |     100 |      100 |     100 |     100 |
+  userOrders.js                  |     100 |      100 |     100 |     100 |
+ src/data                        |     100 |      100 |     100 |     100 |
+  orders.mock.js                 |     100 |      100 |     100 |     100 |
 ---------------------------------|---------|----------|---------|---------|
 ```
 
@@ -583,11 +656,6 @@ All files                        |     100 |      100 |     100 |     100 |
 ### 🧪 Testes Implementados
 
 #### Componentes React
-
-✅ **Dashboard.jsx**
-- Renderização de todos os indicadores
-- Cálculo correto de KPIs (faturamento, ticket médio, contadores)
-- Integração entre componentes
 
 ✅ **Indicators.jsx**
 - Formatação de valores monetários
@@ -663,30 +731,35 @@ dashboard-oficina/
 ├── 📂 public/                    # Arquivos estáticos
 ├── 📂 src/
 │   ├── 📂 components/
-│   │   ├── 📄 AIInsights.jsx        # 🤖 Análise de IA
-│   │   ├── 🎨 AIInsights.css
-│   │   ├── 🧪 AIInsights.test.jsx
 │   │   ├── 📄 Dashboard.jsx         # 🎛️ Container principal
 │   │   ├── 🎨 Dashboard.css
 │   │   ├── 🧪 Dashboard.test.jsx
+│   │   ├── 📄 AIInsights.jsx        # 🤖 Análise de IA
+│   │   ├── 🎨 AIInsights.css
+│   │   ├── 🧪 AIInsights.test.jsx
 │   │   ├── 📄 Indicators.jsx        # 📊 KPIs
 │   │   ├── 🎨 Indicators.css
 │   │   ├── 🧪 Indicators.test.jsx
 │   │   ├── 📄 OrdersTable.jsx       # 📋 Tabela
 │   │   ├── 🎨 OrdersTable.css
 │   │   └── 🧪 OrdersTable.test.jsx
+│   ├── 📂 hooks/
+│   │   ├── 📄 useOrders.js          # 🎣 Hook: calcula métricas
+│   │   └── 🧪 useOrders.test.js
 │   ├── 📂 services/
 │   │   ├── 📄 aiService.js          # 🔌 Integração Gemini
 │   │   └── 🧪 aiService.test.js
 │   ├── 📂 utils/
 │   │   ├── 📄 parseInsight.js       # 🛠️ Parser de IA
 │   │   └── 🧪 parseInsight.test.js
+│   ├── 📂 data/
+│   │   └── 📄 orders.mock.js        # 📊 Mock: 5 ordens de serviço
 │   ├── 📄 App.jsx                   # 🚀 Entry point
 │   ├── 🎨 App.css
 │   └── 📄 main.jsx
 ├── 📂 screenshots/                # 📸 Imagens do README
 │   ├── dashboard-completo.png
-│   └── insights-ia.png
+│   └── dashboard-oficina-demo.png
 ├── 📄 .env.example                # 🔑 Exemplo de configuração
 ├── 📄 .gitignore
 ├── 📄 package.json
@@ -896,9 +969,8 @@ Google Gemini
 
 Desenvolvedora Full Stack especializada em soluções com IA
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Gabriela%20Moura-0077B5?logo=linkedin)](https://linkedin.com/in/seu-perfil)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Gabriela%20Moura-0077B5?logo=linkedin)](https://www.linkedin.com/in/gabriela-daniel-moura/)
 [![GitHub](https://img.shields.io/badge/GitHub-GabrielaMoura25-181717?logo=github)](https://github.com/GabrielaMoura25)
-[![Portfolio](https://img.shields.io/badge/Portfolio-gabrielamoura.dev-FF6B6B)](https://gabrielamoura.dev)
 
 ---
 
@@ -927,7 +999,7 @@ Código disponível para fins educacionais e de portfólio.
 
 <div align="center">
 
-**Desenvolvido com ❤️ e ☕ por Gabriela Moura**
+**Desenvolvido com ❤️ e 🚀 por Gabriela Moura**
 
 [⬆ Voltar ao topo](#-dashboard-de-gestão-de-oficina-com-ia)
 
